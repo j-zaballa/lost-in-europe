@@ -1,23 +1,17 @@
 import { Body, Controller, Get, Param, Post, Query, Res } from '@nestjs/common';
-import {
-  ApiBody,
-  ApiCreatedResponse,
-  ApiExtraModels,
-  ApiOkResponse,
-  ApiTags,
-  getSchemaPath,
-} from '@nestjs/swagger';
+import { ApiBody, ApiCreatedResponse, ApiExtraModels, ApiOkResponse, ApiTags, getSchemaPath } from '@nestjs/swagger';
 import { Response } from 'express';
 import { BusTicketDto } from '../dto/bus-ticket.dto';
 import { CreateItineraryDto } from '../dto/create-itinerary.dto';
 import { ItineraryDto } from '../dto/itinerary.dto';
 import { PlaneTicketDto } from '../dto/plane-ticket.dto';
 import { TrainTicketDto } from '../dto/train-ticket.dto';
+import { TramTicketDto } from '../dto/tram-ticket.dto';
 import { HumanReadableService } from '../service/human-readable.service';
 import { ItinerariesService } from '../service/itineraries.service';
 
 @ApiTags('itineraries')
-@ApiExtraModels(TrainTicketDto, PlaneTicketDto, BusTicketDto)
+@ApiExtraModels(TrainTicketDto, PlaneTicketDto, BusTicketDto, TramTicketDto)
 @Controller('itineraries')
 export class ItinerariesController {
   constructor(
@@ -62,7 +56,7 @@ export class ItinerariesController {
   create(@Body() dto: CreateItineraryDto): ItineraryDto {
     /** dto.tickets is already validated & typed thanks to the
           discriminator configured in CreateItineraryDto            */
-    return this.service.create(dto.tickets);
+    return this.service.create(dto);
   }
 
   /** -----------------------------------------------------------
@@ -72,11 +66,7 @@ export class ItinerariesController {
    * ---------------------------------------------------------- */
   @Get(':id')
   @ApiOkResponse({ type: ItineraryDto, description: 'Ordered itinerary' })
-  findOne(
-    @Param('id') id: string,
-    @Query('format') format: 'json' | 'human' = 'json',
-    @Res() res: Response,
-  ) {
+  findOne(@Param('id') id: string, @Query('format') format: 'json' | 'human' = 'json', @Res() res: Response) {
     const itin = this.service.findOne(id);
 
     if (format === 'human') {
