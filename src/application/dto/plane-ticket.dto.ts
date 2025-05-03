@@ -1,14 +1,7 @@
 import { ApiExtraModels, ApiProperty } from '@nestjs/swagger';
 import { IsIn, IsString } from 'class-validator';
+import { ALLOWED_LUGGAGE_METHODS, LuggageCheckInMethod } from 'src/domain/entities/plane-ticket.entity';
 import { TicketBaseDto } from './ticket-base.dto';
-
-const LUGGAGE_CHECK_IN_METHODS = {
-  SELF_CHECK_IN: 'self-check-in',
-  AUTOMATIC: 'automatic',
-} as const;
-
-const ALLOWED_LUGGAGE_METHODS = Object.values(LUGGAGE_CHECK_IN_METHODS);
-type LuggageCheckInMethod = (typeof ALLOWED_LUGGAGE_METHODS)[number];
 
 @ApiExtraModels()
 export class PlaneTicketDto extends TicketBaseDto {

@@ -6,15 +6,21 @@ export class BusTicketEntity extends TicketEntity {
   constructor(
     from: string,
     to: string,
-    public readonly busCode?: string,
+    public readonly busCode: string,
+    public readonly seat?: string,
   ) {
     super(from, to);
   }
 
   toHumanString(): string {
-    if (this.busCode) {
-      return `Take bus ${this.busCode} from ${this.from} to ${this.to}.`;
+    const seatDescription = this.getSeatDescription();
+    return `Board the ${this.busCode} bus from ${this.from} to ${this.to}. ${seatDescription}.`;
+  }
+
+  private getSeatDescription() {
+    if (this.seat) {
+      return `Seat ${this.seat}`;
     }
-    return `Take a bus from ${this.from} to ${this.to}.`;
+    return 'No seat assignment';
   }
 }

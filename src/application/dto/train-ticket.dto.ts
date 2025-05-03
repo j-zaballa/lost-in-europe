@@ -1,5 +1,5 @@
 import { ApiExtraModels, ApiProperty } from '@nestjs/swagger';
-import { IsOptional, IsString } from 'class-validator';
+import { IsString } from 'class-validator';
 import { TicketBaseDto } from './ticket-base.dto';
 
 @ApiExtraModels()
@@ -14,8 +14,7 @@ export class TrainTicketDto extends TicketBaseDto {
   @IsString()
   platform!: string;
 
-  @ApiProperty({ example: '17C', required: false })
-  @IsOptional()
+  @ApiProperty({ example: '17C' })
   @IsString()
-  seat?: string;
+  seat: string;
 }

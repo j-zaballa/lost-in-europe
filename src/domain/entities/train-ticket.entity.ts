@@ -7,13 +7,13 @@ export class TrainTicketEntity extends TicketEntity {
     from: string,
     to: string,
     public readonly trainNumber: string,
-    public readonly seat?: string,
+    public readonly platform: string,
+    public readonly seat: string,
   ) {
     super(from, to);
   }
 
   toHumanString(): string {
-    const seatInfo = this.seat ? `, seat ${this.seat}` : '';
-    return `Take train ${this.trainNumber} from ${this.from} to ${this.to}${seatInfo}.`;
+    return `Board train ${this.trainNumber}, Platform ${this.platform} from ${this.from} to ${this.to}. Seat number ${this.seat}.`;
   }
 }

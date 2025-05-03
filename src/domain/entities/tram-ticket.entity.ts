@@ -6,15 +6,12 @@ export class TramTicketEntity extends TicketEntity {
   constructor(
     from: string,
     to: string,
-    public readonly lineNumber?: string,
+    public readonly lineNumber: string,
   ) {
     super(from, to);
   }
 
   toHumanString(): string {
-    if (this.lineNumber) {
-      return `Take tram ${this.lineNumber} from ${this.from} to ${this.to}.`;
-    }
-    return `Take a tram from ${this.from} to ${this.to}.`;
+    return `Board the Tram ${this.lineNumber} from ${this.from} to ${this.to}.`;
   }
 }
