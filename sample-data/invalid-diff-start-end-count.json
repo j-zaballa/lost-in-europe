@@ -32,7 +32,7 @@
     },
     {
       "kind": "train",
-      "from": "Brussels",
+      "from": "Vienna",
       "to": "Paris",
       "trainNumber": "THA 9435",
       "platform": "3",

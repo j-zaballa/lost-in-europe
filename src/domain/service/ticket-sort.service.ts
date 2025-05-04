@@ -96,7 +96,7 @@ export class TicketSortService {
     let startNodes = 0;
     let endNodes = 0;
     for (const [city, inDegree] of this.inDeg.entries()) {
-      const outDegree = this.outDeg.get(city) ?? 0;
+      const outDegree = this.outDeg.get(city)!;
       if (Math.abs(inDegree - outDegree) > 1) {
         return false;
       }
@@ -118,10 +118,6 @@ export class TicketSortService {
       return false;
     }
 
-    if (startNodes !== endNodes) {
-      return false;
-    }
-
     return true;
   }
 
@@ -135,7 +131,7 @@ export class TicketSortService {
   private findStartNode(): string {
     // First, look for a node with out-degree > in-degree (start of path)
     for (const [city, inDegree] of this.inDeg.entries()) {
-      const outDegree = this.outDeg.get(city) ?? 0;
+      const outDegree = this.outDeg.get(city)!;
       if (outDegree > inDegree) {
         return city;
       }

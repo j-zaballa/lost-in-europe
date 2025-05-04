@@ -120,6 +120,128 @@ describe('TicketSortService', () => {
     });
   });
 
+  describe('Complex Eulerian Paths', () => {
+    it('should sort tickets correctly for a semi-eulerian path with multi-visits to cities', () => {
+      // Create a path where some cities are visited multiple times
+      // A -> B -> C -> B -> D -> E
+      const tickets: TicketEntity[] = [
+        createRandomTicket('A', 'B'),
+        createRandomTicket('B', 'C'),
+        createRandomTicket('C', 'B'),
+        createRandomTicket('B', 'D'),
+        createRandomTicket('D', 'E'),
+      ];
+
+      const result = service.sort(tickets);
+
+      expect(result).not.toBeNull();
+      expect(result?.length).toBe(tickets.length);
+
+      // Verify the correct path order
+      for (let i = 0; i < result!.length - 1; i++) {
+        expect(result![i].to).toBe(result![i + 1].from);
+      }
+
+      // Verify first and last cities
+      expect(result![0].from).toBe('A');
+      expect(result![result!.length - 1].to).toBe('E');
+
+      // Verify we visit city B twice
+      const bVisits = result!.filter((ticket) => ticket.from === 'B' || ticket.to === 'B').length;
+      expect(bVisits).toBeGreaterThan(2); // B appears at least 3 times (including as origin and destination)
+    });
+
+    it('should sort tickets correctly for an eulerian circuit with multi-visits to cities', () => {
+      // Create a circuit where some cities are visited multiple times
+      // A -> B -> C -> B -> D -> A
+      const tickets: TicketEntity[] = [
+        createRandomTicket('A', 'B'),
+        createRandomTicket('B', 'C'),
+        createRandomTicket('C', 'B'),
+        createRandomTicket('B', 'D'),
+        createRandomTicket('D', 'A'),
+      ];
+
+      const result = service.sort(tickets);
+
+      expect(result).not.toBeNull();
+      expect(result?.length).toBe(tickets.length);
+
+      // Verify the correct circuit
+      for (let i = 0; i < result!.length - 1; i++) {
+        expect(result![i].to).toBe(result![i + 1].from);
+      }
+
+      // Verify it's a circuit
+      expect(result![result!.length - 1].to).toBe(result![0].from);
+
+      // Verify we visit city B twice
+      const bVisits = result!.filter((ticket) => ticket.from === 'B' || ticket.to === 'B').length;
+      expect(bVisits).toBeGreaterThan(2);
+    });
+
+    it('should sort tickets correctly with reflexive edges (same from and to)', () => {
+      // Create a path with city tours (reflexive edges)
+      // A -> B -> B (city tour) -> C -> D -> D (city tour) -> E
+      const tickets: TicketEntity[] = [
+        createRandomTicket('A', 'B'),
+        createRandomTicket('B', 'B'), // City tour in B
+        createRandomTicket('B', 'C'),
+        createRandomTicket('C', 'D'),
+        createRandomTicket('D', 'D'), // City tour in D
+        createRandomTicket('D', 'E'),
+      ];
+
+      const result = service.sort(tickets);
+
+      expect(result).not.toBeNull();
+      expect(result?.length).toBe(tickets.length);
+
+      // Verify first and last cities
+      expect(result![0].from).toBe('A');
+      expect(result![result!.length - 1].to).toBe('E');
+
+      // Verify the reflexive edges are included
+      const bReflexive = result!.some((ticket) => ticket.from === 'B' && ticket.to === 'B');
+      const dReflexive = result!.some((ticket) => ticket.from === 'D' && ticket.to === 'D');
+      expect(bReflexive).toBe(true);
+      expect(dReflexive).toBe(true);
+    });
+
+    it('should sort tickets correctly for a complex path with multi-visits and reflexive edges', () => {
+      // Create a complex path with multiple visits and reflexive edges
+      // A -> B -> C -> C (city tour) -> B -> D -> D (city tour) -> E
+      const tickets: TicketEntity[] = [
+        createRandomTicket('A', 'B'),
+        createRandomTicket('B', 'C'),
+        createRandomTicket('C', 'C'), // City tour in C
+        createRandomTicket('C', 'B'),
+        createRandomTicket('B', 'D'),
+        createRandomTicket('D', 'D'), // City tour in D
+        createRandomTicket('D', 'E'),
+      ];
+
+      const result = service.sort(tickets);
+
+      expect(result).not.toBeNull();
+      expect(result?.length).toBe(tickets.length);
+
+      // Verify first and last cities
+      expect(result![0].from).toBe('A');
+      expect(result![result!.length - 1].to).toBe('E');
+
+      // Check that cities with reflexive edges are included
+      const cReflexive = result!.some((ticket) => ticket.from === 'C' && ticket.to === 'C');
+      const dReflexive = result!.some((ticket) => ticket.from === 'D' && ticket.to === 'D');
+      expect(cReflexive).toBe(true);
+      expect(dReflexive).toBe(true);
+
+      // Verify we visit city B twice
+      const bVisits = result!.filter((ticket) => ticket.from === 'B' || ticket.to === 'B').length;
+      expect(bVisits).toBeGreaterThan(2);
+    });
+  });
+
   describe('Empty Ticket List', () => {
     it('should return null for an empty ticket list', () => {
       const result = service.sort([]);

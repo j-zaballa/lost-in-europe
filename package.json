@@ -46,6 +46,7 @@
     "@eslint/eslintrc": "^3.2.0",
     "@eslint/js": "^9.18.0",
     "@faker-js/faker": "^9.7.0",
+    "@golevelup/ts-jest": "^0.6.2",
     "@nestjs/cli": "^11.0.0",
     "@nestjs/schematics": "^11.0.0",
     "@nestjs/testing": "^11.0.1",
@@ -78,13 +79,18 @@
       "json",
       "ts"
     ],
-    "rootDir": "src",
+    "rootDir": "./",
+    "modulePaths": [
+      "<rootDir>"
+    ],
     "testRegex": ".*\\.spec\\.ts$",
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"
     },
     "collectCoverageFrom": [
-      "**/*.(t|j)s"
+      "src/**/*.(t|j)s",
+      "!src/**/*.module.(t|j)s",
+      "!src/main.ts"
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"

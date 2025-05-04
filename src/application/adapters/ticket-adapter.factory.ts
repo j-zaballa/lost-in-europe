@@ -33,10 +33,11 @@ export class TicketAdapterFactory {
   }
 
   adaptToDto(entity: TicketEntity): TicketBaseDto {
-    const fn = this.entityAdapters.get(entity.kind);
+    const fn = this.dtoAdapters.get(entity.kind);
     if (!fn) {
       throw new BadRequestException(`No adapter registered for kind: ${entity.kind}`);
     }
+
     return fn(entity);
   }
 }
