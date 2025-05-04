@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Query, Res } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query, Res, ValidationPipe } from '@nestjs/common';
 import { ApiBody, ApiCreatedResponse, ApiExtraModels, ApiOkResponse, ApiTags, getSchemaPath } from '@nestjs/swagger';
 import { Response } from 'express';
 import { BusTicketDto } from '../dto/bus-ticket.dto';
@@ -7,17 +7,13 @@ import { ItineraryDto } from '../dto/itinerary.dto';
 import { PlaneTicketDto } from '../dto/plane-ticket.dto';
 import { TrainTicketDto } from '../dto/train-ticket.dto';
 import { TramTicketDto } from '../dto/tram-ticket.dto';
-import { HumanReadableService } from '../service/human-readable.service';
 import { ItinerariesService } from '../service/itineraries.service';
 
 @ApiTags('itineraries')
 @ApiExtraModels(TrainTicketDto, PlaneTicketDto, BusTicketDto, TramTicketDto)
 @Controller('itineraries')
 export class ItinerariesController {
-  constructor(
-    private readonly service: ItinerariesService,
-    private readonly renderer: HumanReadableService,
-  ) {}
+  constructor(private readonly service: ItinerariesService) {}
 
   /** -----------------------------------------------------------
    * POST /itineraries
@@ -39,6 +35,7 @@ export class ItinerariesController {
               { $ref: getSchemaPath(TrainTicketDto) },
               { $ref: getSchemaPath(PlaneTicketDto) },
               { $ref: getSchemaPath(BusTicketDto) },
+              { $ref: getSchemaPath(TramTicketDto) },
             ],
             discriminator: {
               propertyName: 'kind',
@@ -46,6 +43,7 @@ export class ItinerariesController {
                 train: getSchemaPath(TrainTicketDto),
                 plane: getSchemaPath(PlaneTicketDto),
                 bus: getSchemaPath(BusTicketDto),
+                tram: getSchemaPath(TramTicketDto),
               },
             },
           },
@@ -53,9 +51,7 @@ export class ItinerariesController {
       },
     },
   })
-  create(@Body() dto: CreateItineraryDto): ItineraryDto {
-    /** dto.tickets is already validated & typed thanks to the
-          discriminator configured in CreateItineraryDto            */
+  create(@Body(new ValidationPipe()) dto: CreateItineraryDto): ItineraryDto {
     return this.service.create(dto);
   }
 
@@ -67,12 +63,12 @@ export class ItinerariesController {
   @Get(':id')
   @ApiOkResponse({ type: ItineraryDto, description: 'Ordered itinerary' })
   findOne(@Param('id') id: string, @Query('format') format: 'json' | 'human' = 'json', @Res() res: Response) {
-    const itin = this.service.findOne(id);
-
     if (format === 'human') {
-      res.type('text/plain').send(this.renderer.render(itin.tickets));
+      const itineraryString = this.service.printItinerary(id);
+      res.type('text/plain').send(itineraryString);
     } else {
-      res.json(itin);
+      const itinerary = this.service.findOne(id);
+      res.json(itinerary);
     }
   }
 }

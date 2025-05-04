@@ -1,24 +1,22 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { BusTicketAdapter } from './application/adapters/bus-ticket.adapter';
+import { PlaneTicketAdapter } from './application/adapters/plane-ticket.adapter';
+import { TicketAdapterFactory } from './application/adapters/ticket-adapter.factory';
+import { TrainTicketAdapter } from './application/adapters/train-ticket.adapter';
+import { TramTicketAdapter } from './application/adapters/tram-ticket.adapter';
 import { ItinerariesController } from './application/controller/itineraries.controller';
 import { ItinerariesService } from './application/service/itineraries.service';
-import { HumanReadableService } from './application/service/human-readable.service';
-import { TicketSortService } from './domain/service/ticket-sort.service';
-import { TrainTicketAdapter } from './application/adapters/train-ticket.adapter';
-import { PlaneTicketAdapter } from './application/adapters/plane-ticket.adapter';
-import { BusTicketAdapter } from './application/adapters/bus-ticket.adapter';
-import { TramTicketAdapter } from './application/adapters/tram-ticket.adapter';
-import { TicketAdapterFactory } from './application/adapters/ticket-adapter.factory';
+import { ItineraryDomainModule } from './domain/itinerary.module';
+import { PersistenceModule } from './infraestructure/persistence/persistence.module';
 
 @Module({
-  imports: [],
+  imports: [ItineraryDomainModule, PersistenceModule],
   controllers: [AppController, ItinerariesController],
   providers: [
     AppService,
     ItinerariesService,
-    HumanReadableService,
-    TicketSortService,
     TrainTicketAdapter,
     PlaneTicketAdapter,
     BusTicketAdapter,
