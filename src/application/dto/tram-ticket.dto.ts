@@ -1,5 +1,5 @@
 import { ApiExtraModels, ApiProperty } from '@nestjs/swagger';
-import { IsString } from 'class-validator';
+import { IsNotEmpty, IsString } from 'class-validator';
 import { TicketBaseDto } from './ticket-base.dto';
 
 @ApiExtraModels()
@@ -8,5 +8,6 @@ export class TramTicketDto extends TicketBaseDto {
 
   @ApiProperty({ example: 'S5', description: 'Tram / service number' })
   @IsString()
+  @IsNotEmpty({ message: 'lineNumber is required for tram tickets' })
   lineNumber!: string;
 }
