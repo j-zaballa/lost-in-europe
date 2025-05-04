@@ -29,9 +29,9 @@ export class PlaneTicketEntity extends TicketEntity {
 
   private getLiggageDescription() {
     if (this.luggage === 'automatic') {
-      return 'Luggage will transfer automatically from the last flight.';
+      return 'Luggage will transfer automatically from the last flight';
     }
 
-    return 'Self-check-in luggage at counter.';
+    return 'Self-check-in luggage at counter';
   }
 }
