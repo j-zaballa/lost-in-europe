@@ -3,12 +3,12 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { ItineraryEntity as ItineraryDomain } from 'src/domain/entities/itinerary.entity';
 import { TicketEntity } from 'src/domain/entities/ticket-base.entity';
+import { OrmItineraryAdapter } from 'src/infraestructure/adapters/orm-itinerary.adapter';
+import { OrmTicketAdapter } from 'src/infraestructure/adapters/orm-ticket.adapter';
 import { Repository } from 'typeorm';
-import { OrmItineraryAdapter } from '../adapters/orm-itinerary.adapter';
-import { OrmTicketAdapter } from '../adapters/orm-ticket.adapter';
-import { ItineraryEntity as ItineraryEntityOrm } from '../database/entities/itinerary.entity';
-import { TicketEntity as TicketEntityOrm } from '../database/entities/ticket.entity';
-import { TypeOrmItineraryRepository } from './type-orm-itinerary-repository';
+import { ItineraryEntity as ItineraryEntityOrm } from '../../database/entities/itinerary.entity';
+import { TicketEntity as TicketEntityOrm } from '../../database/entities/ticket.entity';
+import { TypeOrmItineraryRepository } from '../type-orm-itinerary-repository';
 
 describe('TypeOrmItineraryRepository', () => {
   let repository: TypeOrmItineraryRepository;

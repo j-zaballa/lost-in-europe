@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ItineraryEntity } from 'src/domain/entities/itinerary.entity';
 import { TicketEntity } from 'src/domain/entities/ticket-base.entity';
-import { InMemoryItineraryRepository } from './in-memory-itinerary-repository';
+import { InMemoryItineraryRepository } from '../in-memory-itinerary-repository';
 
 describe('InMemoryItineraryRepository', () => {
   let repository: InMemoryItineraryRepository;
