@@ -19,7 +19,7 @@ describe('InMemoryItineraryRepository', () => {
   });
 
   describe('save and findOne', () => {
-    it('should save an itinerary and retrieve it by ID', () => {
+    it('should save an itinerary and retrieve it by ID', async () => {
       // Arrange
       const mockTicket = {
         from: 'Paris',
@@ -32,19 +32,20 @@ describe('InMemoryItineraryRepository', () => {
       const itinerary = new ItineraryEntity([mockTicket], customId);
 
       // Act
-      repository.save(itinerary);
-      const result = repository.findOne(customId);
+      await repository.save(itinerary);
+      const result = await repository.findOne(customId);
 
       // Assert
       expect(result).toBe(itinerary);
     });
 
-    it('should return undefined when finding an itinerary that does not exist', () => {
+    it('should return undefined when finding an itinerary that does not exist', async () => {
       // Act & Assert
-      expect(repository.findOne('non-existent-id')).toBeUndefined();
+      const result = await repository.findOne('non-existent-id');
+      expect(result).toBeUndefined();
     });
 
-    it('should update an existing itinerary when saving with the same ID', () => {
+    it('should update an existing itinerary when saving with the same ID', async () => {
       // Arrange
       const mockTicket1 = {
         from: 'Paris',
@@ -65,9 +66,9 @@ describe('InMemoryItineraryRepository', () => {
       const itinerary2 = new ItineraryEntity([mockTicket2], customId);
 
       // Act
-      repository.save(itinerary1);
-      repository.save(itinerary2); // Should overwrite the previous one
-      const result = repository.findOne(customId);
+      await repository.save(itinerary1);
+      await repository.save(itinerary2); // Should overwrite the previous one
+      const result = await repository.findOne(customId);
 
       // Assert
       expect(result).toBe(itinerary2);

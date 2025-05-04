@@ -289,7 +289,7 @@ We have adopted a polymorphic approach to the ticket types and endorsed the open
 
 To add a new ticket type, you need to:
 
-1. **Create a new entity class** in `src/domain/entities/`:
+1. **Create a new domain entity class** in `src/domain/entities/`:
 
    - Create a file like `new-ticket.entity.ts`
    - Extend the `TicketEntity` base class
@@ -315,21 +315,44 @@ To add a new ticket type, you need to:
    - Add the new adapter to the constructor parameters
    - Register the new adapter in the entityAdapters and dtoAdapters maps
 
-5. **Update the create itinerary DTO** in `src/application/dto/create-itinerary.dto.ts`:
+5. **Update the ORM adapter** in `src/infraestructure/adapters/orm-ticket.adapter.ts`:
+
+   - Add a new case in the `adaptToDomain` method to handle the new ticket type
+   - Add a new case in the `adaptToOrm` method to convert from domain entity to ORM entity
+   - Ensure all specific fields are properly mapped in both directions
+
+6. **Update the database entity** in `src/infraestructure/database/entities/ticket.entity.ts`:
+
+   - Add any new fields needed for the new ticket type
+   - Consider adding appropriate indices or constraints
+
+7. **Update the create itinerary DTO** in `src/application/dto/create-itinerary.dto.ts`:
 
    - Add import for the new DTO
    - Add the new DTO to the `@ApiExtraModels` decorator
    - Add the new DTO ref to the `oneOf` array
    - Add the new ticket type to the discriminator subTypes array
 
-6. **Update the itinerary DTO** in `src/application/dto/itinerary.dto.ts`:
+8. **Update the itinerary DTO** in `src/application/dto/itinerary.dto.ts`:
 
    - Add import for the new DTO
    - Add the new DTO to the `oneOf` array
 
-7. **Register the new adapter in** `src/app.module.ts`:
-   - Import the new adapter
-   - Add it to the providers array
+9. **Update the controller** in `src/application/controller/itineraries.controller.ts`:
+
+   - Add the new DTO to the `@ApiExtraModels` decorator
+   - Add the new DTO ref to the API mapping
+
+10. **Register the new adapter in** `src/app.module.ts`:
+
+    - Import the new adapter
+    - Add it to the providers array
+
+11. **Update the tests**:
+    - Add unit tests for the new entity in `src/domain/entities/__tests__/`
+    - Add unit tests for the new DTO adapter in `src/application/adapters/__tests__/`
+    - Update ORM adapter tests in `src/infraestructure/adapters/__tests__/orm-ticket.adapter.spec.ts`
+    - Ensure all your tests pass and maintain high coverage
 
 ## API Contract
 

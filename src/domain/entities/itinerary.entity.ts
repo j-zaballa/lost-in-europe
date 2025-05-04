@@ -1,4 +1,4 @@
-import { randomUUID } from 'crypto';
+import { v4 as uuidv4 } from 'uuid';
 import { TicketEntity } from './ticket-base.entity';
 
 /**
@@ -10,11 +10,6 @@ export class ItineraryEntity {
    */
   public readonly id: string;
 
-  /**
-   * Creation timestamp of the itinerary
-   */
-  public readonly createdAt: Date;
-
   constructor(
     /**
      * Ordered collection of tickets forming a complete travel route
@@ -22,8 +17,7 @@ export class ItineraryEntity {
     public readonly tickets: TicketEntity[],
     id?: string,
   ) {
-    this.id = id || randomUUID();
-    this.createdAt = new Date();
+    this.id = id || uuidv4();
   }
 
   /**

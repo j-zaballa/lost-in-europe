@@ -4,7 +4,6 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { ItineraryEntity } from 'src/domain/entities/itinerary.entity';
 import { TicketSortService } from 'src/domain/service/ticket-sort.service';
 import { ItineraryRepository } from 'src/infraestructure/repository/itinerary-repository';
-import { v4 as uuidv4 } from 'uuid';
 import { TicketAdapterFactory } from '../adapters/ticket-adapter.factory';
 import { CreateItineraryDto } from '../dto/create-itinerary.dto';
 import { ItineraryDto } from '../dto/itinerary.dto';
@@ -24,7 +23,7 @@ export class ItinerariesService {
    * @returns the itinerary ID plus the *ordered* Ticket DTOs
    * @throws BadRequestException if no itinerary is found
    */
-  create(createDto: CreateItineraryDto): ItineraryDto {
+  async create(createDto: CreateItineraryDto): Promise<ItineraryDto> {
     // 1. Order the DTOs by their from/to fields.
     //    SortService only cares about `.from` and `.to`
     const tickets = createDto.tickets.map((ticket) => this.ticketAdapter.adaptToEntity(ticket));
@@ -33,16 +32,13 @@ export class ItinerariesService {
       throw new BadRequestException('Invalid itinerary');
     }
 
-    // 2. Generate a new itinerary ID
-    const id = uuidv4();
-
     // 3. Persist the itinerary
-    const itinerary = new ItineraryEntity(orderedTickets, id);
-    this.repo.save(itinerary);
+    const itinerary = new ItineraryEntity(orderedTickets);
+    const savedItinerary = await this.repo.save(itinerary);
 
     // 4. Return the DTO response
-    const ticketDtos = orderedTickets.map((ticket) => this.ticketAdapter.adaptToDto(ticket));
-    const itineraryDto = { id, tickets: ticketDtos };
+    const ticketDtos = savedItinerary.tickets.map((ticket) => this.ticketAdapter.adaptToDto(ticket));
+    const itineraryDto = { id: savedItinerary.id, tickets: ticketDtos };
     return itineraryDto;
   }
 
@@ -52,8 +48,8 @@ export class ItinerariesService {
    * @param id - UUID of the itinerary
    * @throws NotFoundException if no record exists
    */
-  findOne(id: string): ItineraryDto {
-    const record = this.repo.findOne(id);
+  async findOne(id: string): Promise<ItineraryDto> {
+    const record = await this.repo.findOne(id);
     if (!record) {
       throw new NotFoundException(`Itinerary with ID "${id}" not found`);
     }
@@ -69,8 +65,8 @@ export class ItinerariesService {
    * @returns a human-readable string
    * @throws NotFoundException if no record exists
    */
-  printItinerary(id: string) {
-    const record = this.repo.findOne(id);
+  async printItinerary(id: string): Promise<string> {
+    const record = await this.repo.findOne(id);
     if (!record) {
       throw new NotFoundException(`Itinerary with ID "${id}" not found`);
     }

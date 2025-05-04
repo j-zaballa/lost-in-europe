@@ -1,8 +1,8 @@
 import { ItineraryEntity } from '../itinerary.entity';
 import { TicketEntity } from '../ticket-base.entity';
 
-jest.mock('crypto', () => ({
-  randomUUID: jest.fn(() => 'mocked-uuid'),
+jest.mock('uuid', () => ({
+  v4: jest.fn(() => 'mocked-uuid'),
 }));
 
 describe('ItineraryEntity', () => {
@@ -42,7 +42,6 @@ describe('ItineraryEntity', () => {
       expect(itinerary).toBeDefined();
       expect(itinerary.id).toBe('mocked-uuid'); // Uses mocked UUID
       expect(itinerary.tickets).toBe(mockTickets);
-      expect(itinerary.createdAt).toEqual(new Date('2024-01-01'));
     });
 
     it('should use the provided ID if one is given', () => {

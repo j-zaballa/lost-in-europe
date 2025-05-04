@@ -10,10 +10,11 @@ import { TramTicketAdapter } from './application/adapters/tram-ticket.adapter';
 import { ItinerariesController } from './application/controller/itineraries.controller';
 import { ItinerariesService } from './application/service/itineraries.service';
 import { ItineraryDomainModule } from './domain/itinerary.module';
+import { DatabaseModule } from './infraestructure/database/database.module';
 import { RepositoryModule } from './infraestructure/repository/repository.module';
 
 @Module({
-  imports: [ConfigModule.forRoot({ isGlobal: true }), ItineraryDomainModule, RepositoryModule],
+  imports: [ConfigModule.forRoot({ isGlobal: true }), ItineraryDomainModule, RepositoryModule, DatabaseModule],
   controllers: [AppController, ItinerariesController],
   providers: [
     AppService,

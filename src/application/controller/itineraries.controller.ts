@@ -61,7 +61,7 @@ export class ItinerariesController {
       },
     },
   })
-  create(@Body(new ValidationPipe()) dto: CreateItineraryDto): ItineraryDto {
+  create(@Body(new ValidationPipe()) dto: CreateItineraryDto): Promise<ItineraryDto> {
     return this.service.create(dto);
   }
 
@@ -73,12 +73,12 @@ export class ItinerariesController {
   @Get(':id')
   @ApiOkResponse({ type: ItineraryDto, description: 'Ordered itinerary' })
   @ApiNotFoundResponse({ description: 'Itinerary not found' })
-  findOne(@Param('id') id: string, @Query('format') format: 'json' | 'human' = 'json', @Res() res: Response) {
+  async findOne(@Param('id') id: string, @Query('format') format: 'json' | 'human' = 'json', @Res() res: Response) {
     if (format === 'human') {
-      const itineraryString = this.service.printItinerary(id);
+      const itineraryString = await this.service.printItinerary(id);
       res.type('text/plain').send(itineraryString);
     } else {
-      const itinerary = this.service.findOne(id);
+      const itinerary = await this.service.findOne(id);
       res.json(itinerary);
     }
   }

@@ -38,7 +38,7 @@ describe('ItinerariesService', () => {
   });
 
   describe('create', () => {
-    it('should create an itinerary successfully', () => {
+    it('should create an itinerary successfully', async () => {
       // Arrange
       const mockTicketDtos: TicketBaseDto[] = [{ kind: 'train', from: 'A', to: 'B' }];
       const mockTicketEntity = {
@@ -52,10 +52,11 @@ describe('ItinerariesService', () => {
 
       ticketAdapter.adaptToEntity.mockReturnValueOnce(mockTicketEntity);
       sortService.sort.mockReturnValueOnce(mockTicketEntities);
+      repo.save.mockResolvedValueOnce(new ItineraryEntity(mockTicketEntities, 'mocked-uuid'));
       ticketAdapter.adaptToDto.mockReturnValueOnce(mockTicketDtos[0]);
 
       // Act
-      const result = service.create(mockCreateDto);
+      const result = await service.create(mockCreateDto);
 
       // Assert
       expect(result).toEqual({
@@ -68,7 +69,7 @@ describe('ItinerariesService', () => {
       expect(ticketAdapter.adaptToDto).toHaveBeenCalledWith(mockTicketEntities[0]);
     });
 
-    it('should throw BadRequestException when no itinerary can be found', () => {
+    it('should throw BadRequestException when no itinerary can be found', async () => {
       // Arrange
       const mockTicketDtos: TicketBaseDto[] = [{ kind: 'train', from: 'A', to: 'B' }];
       const mockTicketEntity = {
@@ -83,14 +84,14 @@ describe('ItinerariesService', () => {
       sortService.sort.mockReturnValueOnce(null);
 
       // Act & Assert
-      expect(() => service.create(mockCreateDto)).toThrow(BadRequestException);
+      await expect(service.create(mockCreateDto)).rejects.toThrow(BadRequestException);
       expect(sortService.sort).toHaveBeenCalledWith([mockTicketEntity]);
       expect(repo.save).not.toHaveBeenCalled();
     });
   });
 
   describe('findOne', () => {
-    it('should return an itinerary when it exists', () => {
+    it('should return an itinerary when it exists', async () => {
       // Arrange
       const id = 'existing-id';
       const mockTicketEntity = {
@@ -103,11 +104,11 @@ describe('ItinerariesService', () => {
       const mockTicketDtos: TicketBaseDto[] = [{ kind: 'train', from: 'A', to: 'B' }];
       const mockItinerary = new ItineraryEntity(mockTicketEntities, id);
 
-      repo.findOne.mockReturnValueOnce(mockItinerary);
+      repo.findOne.mockResolvedValueOnce(mockItinerary);
       ticketAdapter.adaptToDto.mockReturnValueOnce(mockTicketDtos[0]);
 
       // Act
-      const result = service.findOne(id);
+      const result = await service.findOne(id);
 
       // Assert
       expect(result).toEqual({
@@ -118,19 +119,19 @@ describe('ItinerariesService', () => {
       expect(ticketAdapter.adaptToDto).toHaveBeenCalledWith(mockTicketEntities[0]);
     });
 
-    it('should throw NotFoundException when itinerary does not exist', () => {
+    it('should throw NotFoundException when itinerary does not exist', async () => {
       // Arrange
       const id = 'non-existing-id';
-      repo.findOne.mockReturnValue(undefined);
+      repo.findOne.mockResolvedValue(undefined);
 
       // Act & Assert
-      expect(() => service.findOne(id)).toThrow(NotFoundException);
+      await expect(service.findOne(id)).rejects.toThrow(NotFoundException);
       expect(repo.findOne).toHaveBeenCalledWith(id);
     });
   });
 
   describe('printItinerary', () => {
-    it('should return a human-readable string for an existing itinerary', () => {
+    it('should return a human-readable string for an existing itinerary', async () => {
       // Arrange
       const id = 'existing-id';
       const mockTicketEntity = {
@@ -142,11 +143,11 @@ describe('ItinerariesService', () => {
       const mockItinerary = new ItineraryEntity([mockTicketEntity], id);
       const humanReadableString = 'Human readable itinerary';
 
-      repo.findOne.mockReturnValueOnce(mockItinerary);
+      repo.findOne.mockResolvedValue(mockItinerary);
       jest.spyOn(mockItinerary, 'toHumanString').mockReturnValueOnce(humanReadableString);
 
       // Act
-      const result = service.printItinerary(id);
+      const result = await service.printItinerary(id);
 
       // Assert
       expect(result).toBe(humanReadableString);
@@ -154,13 +155,13 @@ describe('ItinerariesService', () => {
       expect(mockItinerary.toHumanString).toHaveBeenCalled();
     });
 
-    it('should throw NotFoundException when itinerary does not exist', () => {
+    it('should throw NotFoundException when itinerary does not exist', async () => {
       // Arrange
       const id = 'non-existing-id';
-      repo.findOne.mockReturnValue(undefined);
+      repo.findOne.mockResolvedValue(undefined);
 
       // Act & Assert
-      expect(() => service.printItinerary(id)).toThrow(NotFoundException);
+      await expect(service.printItinerary(id)).rejects.toThrow(NotFoundException);
       expect(repo.findOne).toHaveBeenCalledWith(id);
     });
   });

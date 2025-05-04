@@ -29,7 +29,7 @@ describe('ItinerariesController', () => {
   });
 
   describe('create', () => {
-    it('should create an itinerary and return the result from service', () => {
+    it('should create an itinerary and return the result from service', async () => {
       // Arrange
       const trainTicket = {
         kind: 'train',
@@ -57,10 +57,10 @@ describe('ItinerariesController', () => {
         tickets: [trainTicket, busTicket],
       };
 
-      service.create.mockReturnValue(expectedResult);
+      service.create.mockResolvedValue(expectedResult);
 
       // Act
-      const result = controller.create(createDto);
+      const result = await controller.create(createDto);
 
       // Assert
       expect(result).toBe(expectedResult);
@@ -69,7 +69,7 @@ describe('ItinerariesController', () => {
   });
 
   describe('findOne', () => {
-    it('should return the itinerary as JSON by default', () => {
+    it('should return the itinerary as JSON by default', async () => {
       // Arrange
       const itineraryId = 'test-id-123';
       const trainTicket = {
@@ -92,17 +92,17 @@ describe('ItinerariesController', () => {
         send: jest.fn(),
       } as unknown as jest.Mocked<Response>;
 
-      service.findOne.mockReturnValue(expectedItinerary);
+      service.findOne.mockResolvedValue(expectedItinerary);
 
       // Act
-      controller.findOne(itineraryId, 'json', response);
+      await controller.findOne(itineraryId, 'json', response);
 
       // Assert
       expect(service.findOne).toHaveBeenCalledWith(itineraryId);
       expect(response.json).toHaveBeenCalledWith(expectedItinerary);
     });
 
-    it('should use JSON format when no format is specified (default parameter)', () => {
+    it('should use JSON format when no format is specified (default parameter)', async () => {
       // Arrange
       const itineraryId = 'test-id-123';
       const trainTicket = {
@@ -125,17 +125,17 @@ describe('ItinerariesController', () => {
         send: jest.fn(),
       } as unknown as jest.Mocked<Response>;
 
-      service.findOne.mockReturnValue(expectedItinerary);
+      service.findOne.mockResolvedValue(expectedItinerary);
 
       // Act - note we're not specifying the format parameter here
-      controller.findOne(itineraryId, undefined, response);
+      await controller.findOne(itineraryId, undefined, response);
 
       // Assert
       expect(service.findOne).toHaveBeenCalledWith(itineraryId);
       expect(response.json).toHaveBeenCalledWith(expectedItinerary);
     });
 
-    it('should return plain text when format is human', () => {
+    it('should return plain text when format is human', async () => {
       // Arrange
       const itineraryId = 'test-id-123';
       const humanReadableText = 'This is a human-readable itinerary';
@@ -146,10 +146,10 @@ describe('ItinerariesController', () => {
         send: jest.fn(),
       } as unknown as jest.Mocked<Response>;
 
-      service.printItinerary.mockReturnValue(humanReadableText);
+      service.printItinerary.mockResolvedValue(humanReadableText);
 
       // Act
-      controller.findOne(itineraryId, 'human', response);
+      await controller.findOne(itineraryId, 'human', response);
 
       // Assert
       expect(service.printItinerary).toHaveBeenCalledWith(itineraryId);
@@ -157,7 +157,7 @@ describe('ItinerariesController', () => {
       expect(response.send).toHaveBeenCalledWith(humanReadableText);
     });
 
-    it('should pass through exceptions from the service', () => {
+    it('should pass through exceptions from the service', async () => {
       // Arrange
       const itineraryId = 'non-existent-id';
 
@@ -168,17 +168,15 @@ describe('ItinerariesController', () => {
       } as unknown as jest.Mocked<Response>;
 
       const error = new NotFoundException(`Itinerary with ID "${itineraryId}" not found`);
-      service.findOne.mockImplementation(() => {
-        throw error;
-      });
+      service.findOne.mockRejectedValue(error);
 
       // Act & Assert
-      expect(() => controller.findOne(itineraryId, 'json', response)).toThrow(NotFoundException);
+      await expect(controller.findOne(itineraryId, 'json', response)).rejects.toThrow(NotFoundException);
       expect(service.findOne).toHaveBeenCalledWith(itineraryId);
       expect(response.json).not.toHaveBeenCalled();
     });
 
-    it('should pass through exceptions from the service for human format', () => {
+    it('should pass through exceptions from the service for human format', async () => {
       // Arrange
       const itineraryId = 'non-existent-id';
 
@@ -189,12 +187,10 @@ describe('ItinerariesController', () => {
       } as unknown as jest.Mocked<Response>;
 
       const error = new NotFoundException(`Itinerary with ID "${itineraryId}" not found`);
-      service.printItinerary.mockImplementation(() => {
-        throw error;
-      });
+      service.printItinerary.mockRejectedValue(error);
 
       // Act & Assert
-      expect(() => controller.findOne(itineraryId, 'human', response)).toThrow(NotFoundException);
+      await expect(controller.findOne(itineraryId, 'human', response)).rejects.toThrow(NotFoundException);
       expect(service.printItinerary).toHaveBeenCalledWith(itineraryId);
       expect(response.send).not.toHaveBeenCalled();
     });
