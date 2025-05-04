@@ -3,7 +3,7 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { ItineraryEntity } from 'src/domain/entities/itinerary.entity';
 import { TicketSortService } from 'src/domain/service/ticket-sort.service';
-import { ItineraryRepository } from 'src/infraestructure/persistence/itinerary-repository';
+import { ItineraryRepository } from 'src/infraestructure/repository/itinerary-repository';
 import { v4 as uuidv4 } from 'uuid';
 import { TicketAdapterFactory } from '../adapters/ticket-adapter.factory';
 import { CreateItineraryDto } from '../dto/create-itinerary.dto';

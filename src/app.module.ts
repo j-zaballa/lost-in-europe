@@ -9,10 +9,10 @@ import { TramTicketAdapter } from './application/adapters/tram-ticket.adapter';
 import { ItinerariesController } from './application/controller/itineraries.controller';
 import { ItinerariesService } from './application/service/itineraries.service';
 import { ItineraryDomainModule } from './domain/itinerary.module';
-import { PersistenceModule } from './infraestructure/persistence/persistence.module';
+import { RepositoryModule } from './infraestructure/repository/repository.module';
 
 @Module({
-  imports: [ItineraryDomainModule, PersistenceModule],
+  imports: [ItineraryDomainModule, RepositoryModule],
   controllers: [AppController, ItinerariesController],
   providers: [
     AppService,

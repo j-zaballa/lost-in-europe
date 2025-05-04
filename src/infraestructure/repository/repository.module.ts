@@ -11,4 +11,4 @@ import { ItineraryRepository } from './itinerary-repository';
   ],
   exports: [ItineraryRepository],
 })
-export class PersistenceModule {}
+export class RepositoryModule {}
