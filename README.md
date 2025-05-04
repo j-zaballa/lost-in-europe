@@ -1,37 +1,20 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
-
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
-
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
-
-## Description
-
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+# Lost in Europe
 
 ## Project setup
+
+### Clone the repository
+
+```bash
+$ git clone https://github.com/j-zaballa/lost-in-europe.git
+```
+
+### Install dependencies
 
 ```bash
 $ npm install
 ```
 
-## Compile and run the project
+### Compile and run the project
 
 ```bash
 # development
@@ -40,59 +23,437 @@ $ npm run start
 # watch mode
 $ npm run start:dev
 
-# production mode
-$ npm run start:prod
+# debug mode
+$ npm run start:debug
 ```
 
-## Run tests
+### Run tests
 
 ```bash
 # unit tests
 $ npm run test
 
-# e2e tests
-$ npm run test:e2e
-
 # test coverage
 $ npm run test:cov
 ```
 
-## Deployment
+## Documentation
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+visit http://localhost:3000/docs to see the API documentation. You can also use the Swagger UI to test the API. You can
+find sample test data in the `sample-data` folder.
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+## Usage
+
+### Create an itinerary
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+curl -X 'POST' \
+  'http://localhost:3000/itineraries' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "tickets": [
+    {
+      "kind": "plane",
+      "from": "Bologna Airport",
+      "to": "Paris",
+      "flightNumber": "AF1229",
+      "gate": "22",
+      "seat": "10A",
+      "luggage": "self-check-in"
+    },
+    {
+      "kind": "train",
+      "from": "Venice",
+      "to": "Bologna",
+      "trainNumber": "ICN 35780",
+      "platform": "1",
+      "seat": "13F"
+    },
+    {
+      "kind": "plane",
+      "from": "Paris",
+      "to": "Chicago",
+      "flightNumber": "AF136",
+      "gate": "32",
+      "seat": "10A",
+      "luggage": "automatic"
+    },
+    {
+      "kind": "tram",
+      "from": "Innsbruck",
+      "to": "Innsbruck Airport",
+      "lineNumber": "S5"
+    },
+    {
+      "kind": "bus",
+      "from": "Bologna",
+      "to": "Bologna Airport",
+      "busCode": "BLQ12"
+    },
+    {
+      "kind": "train",
+      "from": "St. Anton am Arlberg",
+      "to": "Innsbruck",
+      "trainNumber": "RJX 765",
+      "platform": "3",
+      "seat": "17C"
+    },
+    {
+      "kind": "plane",
+      "from": "Innsbruck Airport",
+      "to": "Venice",
+      "flightNumber": "AA904",
+      "gate": "10",
+      "seat": "18B",
+      "luggage": "self-check-in"
+    }
+  ]
+}
+'
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+Output:
 
-## Resources
+```json
+{
+  "id": "e8c2b492-2849-4274-9dba-2888ae771732",
+  "tickets": [
+    {
+      "from": "St. Anton am Arlberg",
+      "to": "Innsbruck",
+      "kind": "train",
+      "trainNumber": "RJX 765",
+      "platform": "3",
+      "seat": "17C"
+    },
+    {
+      "from": "Innsbruck",
+      "to": "Innsbruck Airport",
+      "kind": "tram",
+      "lineNumber": "S5"
+    },
+    {
+      "from": "Innsbruck Airport",
+      "to": "Venice",
+      "kind": "plane",
+      "flightNumber": "AA904",
+      "seat": "18B",
+      "gate": "10",
+      "luggage": "self-check-in"
+    },
+    {
+      "from": "Venice",
+      "to": "Bologna",
+      "kind": "train",
+      "trainNumber": "ICN 35780",
+      "platform": "1",
+      "seat": "13F"
+    },
+    {
+      "from": "Bologna",
+      "to": "Bologna Airport",
+      "kind": "bus",
+      "busCode": "BLQ12"
+    },
+    {
+      "from": "Bologna Airport",
+      "to": "Paris",
+      "kind": "plane",
+      "flightNumber": "AF1229",
+      "seat": "10A",
+      "gate": "22",
+      "luggage": "self-check-in"
+    },
+    {
+      "from": "Paris",
+      "to": "Chicago",
+      "kind": "plane",
+      "flightNumber": "AF136",
+      "seat": "10A",
+      "gate": "32",
+      "luggage": "automatic"
+    }
+  ]
+}
+```
 
-Check out a few resources that may come in handy when working with NestJS:
+### Get an itinerary
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+Get the ID from the previous response and use it to get the itinerary in JSON or human readable format.
 
-## Support
+JSON format:
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```bash
+curl -X 'GET' \
+  'http://localhost:3000/itineraries/e8c2b492-2849-4274-9dba-2888ae771732?format=json' \
+  -H 'accept: application/json'
+```
 
-## Stay in touch
+Output:
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+```json
+{
+  "id": "e8c2b492-2849-4274-9dba-2888ae771732",
+  "tickets": [
+    {
+      "from": "St. Anton am Arlberg",
+      "to": "Innsbruck",
+      "kind": "train",
+      "trainNumber": "RJX 765",
+      "platform": "3",
+      "seat": "17C"
+    },
+    {
+      "from": "Innsbruck",
+      "to": "Innsbruck Airport",
+      "kind": "tram",
+      "lineNumber": "S5"
+    },
+    {
+      "from": "Innsbruck Airport",
+      "to": "Venice",
+      "kind": "plane",
+      "flightNumber": "AA904",
+      "seat": "18B",
+      "gate": "10",
+      "luggage": "self-check-in"
+    },
+    {
+      "from": "Venice",
+      "to": "Bologna",
+      "kind": "train",
+      "trainNumber": "ICN 35780",
+      "platform": "1",
+      "seat": "13F"
+    },
+    {
+      "from": "Bologna",
+      "to": "Bologna Airport",
+      "kind": "bus",
+      "busCode": "BLQ12"
+    },
+    {
+      "from": "Bologna Airport",
+      "to": "Paris",
+      "kind": "plane",
+      "flightNumber": "AF1229",
+      "seat": "10A",
+      "gate": "22",
+      "luggage": "self-check-in"
+    },
+    {
+      "from": "Paris",
+      "to": "Chicago",
+      "kind": "plane",
+      "flightNumber": "AF136",
+      "seat": "10A",
+      "gate": "32",
+      "luggage": "automatic"
+    }
+  ]
+}
+```
 
-## License
+Human readable format:
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+```bash
+curl -X 'GET' \
+  'http://localhost:3000/itineraries/e8c2b492-2849-4274-9dba-2888ae771732?format=human' \
+  -H 'accept: text/plain'
+```
+
+Output:
+
+```
+0. Start.
+1. Board train RJX 765, Platform 3 from St. Anton am Arlberg to Innsbruck. Seat number 17C.
+2. Board the Tram S5 from Innsbruck to Innsbruck Airport.
+3. From Innsbruck Airport, board the flight AA904 to Venice from gate 10, seat 18B. Self-check-in luggage at counter.
+4. Board train ICN 35780, Platform 1 from Venice to Bologna. Seat number 13F.
+5. Board the BLQ12 bus from Bologna to Bologna Airport. No seat assignment.
+6. From Bologna Airport, board the flight AF1229 to Paris from gate 22, seat 10A. Self-check-in luggage at counter.
+7. From Paris, board the flight AF136 to Chicago from gate 32, seat 10A. Luggage will transfer automatically from the last flight.
+8. Last destination reached.
+```
+
+## Assumptions
+
+- The train ticket seat is mandatory event though there are train tickets without a seat number in real life
+- The luggage mode in plane tickets is either automatic or self-check-in
+- The `from` and `to` fields are strings, not locations. So the user must provide the correct location names and spell them exactly the same every time
+- It would be normal to assume that Kevin's tickets path is a semi-Eulerian path, because the family holiday has already started and they are already away from home. But the API also works for closed Eulerian paths. Kevin would have to work out the starting point of the given path given his current location
+
+## Add New Ticket Types
+
+We have adopted a polymorphic approach to the ticket types and endorsed the open/closed principle so we can add new ticket types without modifying the existing code.
+
+To add a new ticket type, you need to:
+
+1. **Create a new entity class** in `src/domain/entities/`:
+
+   - Create a file like `new-ticket.entity.ts`
+   - Extend the `TicketEntity` base class
+   - Implement the required `kind` property and `toHumanString()` method
+   - Add any ticket-specific properties
+
+2. **Create a new DTO** in `src/application/dto/`:
+
+   - Create a file like `new-ticket.dto.ts`
+   - Extend the `TicketBaseDto` abstract class
+   - Define the `kind` property with a unique string
+   - Add validation decorators to ticket-specific fields
+   - Use Swagger decorators for API documentation
+
+3. **Create a new adapter** in `src/application/adapters/`:
+
+   - Create a file like `new-ticket.adapter.ts`
+   - Implement the `TicketAdapter` interface
+   - Create mapping logic between DTO and entity
+
+4. **Update the adapter factory** in `src/application/adapters/ticket-adapter.factory.ts`:
+
+   - Add the new adapter to the constructor parameters
+   - Register the new adapter in the entityAdapters and dtoAdapters maps
+
+5. **Update the create itinerary DTO** in `src/application/dto/create-itinerary.dto.ts`:
+
+   - Add import for the new DTO
+   - Add the new DTO to the `@ApiExtraModels` decorator
+   - Add the new DTO ref to the `oneOf` array
+   - Add the new ticket type to the discriminator subTypes array
+
+6. **Update the itinerary DTO** in `src/application/dto/itinerary.dto.ts`:
+
+   - Add import for the new DTO
+   - Add the new DTO to the `oneOf` array
+
+7. **Register the new adapter in** `src/app.module.ts`:
+   - Import the new adapter
+   - Add it to the providers array
+
+## API Contract
+
+### Base Ticket DTO
+
+```typescript
+export abstract class TicketBaseDto {
+  @IsString()
+  @IsNotEmpty({ message: 'from is required for all tickets' })
+  from!: string;
+
+  @IsString()
+  @IsNotEmpty({ message: 'to is required for all tickets' })
+  to!: string;
+
+  /**
+   * Discriminator used by validation pipes to detect concrete subtype.
+   * Every subclass returns its own literal.
+   */
+  @IsString()
+  @IsNotEmpty({ message: 'kind is required for all tickets' })
+  abstract readonly kind: string;
+}
+```
+
+### Plane Ticket DTO
+
+```typescript
+export class PlaneTicketDto extends TicketBaseDto {
+  readonly kind = 'plane' as const;
+
+  @IsString()
+  @IsNotEmpty({ message: 'flightNumber is required for plane tickets' })
+  flightNumber!: string;
+
+  @IsString()
+  @IsNotEmpty({ message: 'seat is required for plane tickets' })
+  seat!: string;
+
+  @IsString()
+  @IsNotEmpty({ message: 'gate is required for plane tickets' })
+  gate!: string;
+
+  @IsIn(['self-check-in', 'automatic'])
+  luggage!: LuggageCheckInMethod;
+}
+```
+
+### Train Ticket DTO
+
+```typescript
+export class TrainTicketDto extends TicketBaseDto {
+  readonly kind = 'train' as const;
+
+  @IsString()
+  @IsNotEmpty({ message: 'trainNumber is required for train tickets' })
+  trainNumber!: string;
+
+  @IsString()
+  @IsNotEmpty({ message: 'platform is required for train tickets' })
+  platform!: string;
+
+  @IsString()
+  @IsNotEmpty({ message: 'seat is required for train tickets' })
+  seat!: string;
+}
+```
+
+### Bus Ticket DTO
+
+```typescript
+export class BusTicketDto extends TicketBaseDto {
+  readonly kind = 'bus' as const;
+
+  @IsString()
+  @IsNotEmpty({ message: 'busCode is required for bus tickets' })
+  busCode!: string;
+
+  @IsOptional()
+  @IsString()
+  seat?: string;
+}
+```
+
+### Tram Ticket DTO
+
+```typescript
+export class TramTicketDto extends TicketBaseDto {
+  readonly kind = 'tram' as const;
+
+  @IsString()
+  @IsNotEmpty({ message: 'lineNumber is required for tram tickets' })
+  lineNumber!: string;
+}
+```
+
+### Create Itinerary DTO
+
+```typescript
+export class CreateItineraryDto {
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => TicketBaseDto, {
+    discriminator: {
+      property: 'kind',
+      subTypes: [
+        { value: TrainTicketDto, name: 'train' },
+        { value: PlaneTicketDto, name: 'plane' },
+        { value: BusTicketDto, name: 'bus' },
+        { value: TramTicketDto, name: 'tram' },
+      ],
+    },
+    keepDiscriminatorProperty: true,
+  })
+  tickets!: TicketBaseDto[];
+}
+```
+
+### Itinerary DTO
+
+```typescript
+export class ItineraryDto {
+  id!: string;
+  tickets!: TicketBaseDto[];
+}
+```
