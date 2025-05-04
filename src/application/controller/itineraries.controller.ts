@@ -1,5 +1,14 @@
 import { Body, Controller, Get, Param, Post, Query, Res, ValidationPipe } from '@nestjs/common';
-import { ApiBody, ApiCreatedResponse, ApiExtraModels, ApiOkResponse, ApiTags, getSchemaPath } from '@nestjs/swagger';
+import {
+  ApiBadRequestResponse,
+  ApiBody,
+  ApiCreatedResponse,
+  ApiExtraModels,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiTags,
+  getSchemaPath,
+} from '@nestjs/swagger';
 import { Response } from 'express';
 import { BusTicketDto } from '../dto/bus-ticket.dto';
 import { CreateItineraryDto } from '../dto/create-itinerary.dto';
@@ -23,6 +32,7 @@ export class ItinerariesController {
    * ---------------------------------------------------------- */
   @Post()
   @ApiCreatedResponse({ type: ItineraryDto })
+  @ApiBadRequestResponse({ description: 'Invalid itinerary' })
   @ApiBody({
     description: 'Unsorted list of tickets (polymorphic)',
     schema: {
@@ -62,6 +72,7 @@ export class ItinerariesController {
    * ---------------------------------------------------------- */
   @Get(':id')
   @ApiOkResponse({ type: ItineraryDto, description: 'Ordered itinerary' })
+  @ApiNotFoundResponse({ description: 'Itinerary not found' })
   findOne(@Param('id') id: string, @Query('format') format: 'json' | 'human' = 'json', @Res() res: Response) {
     if (format === 'human') {
       const itineraryString = this.service.printItinerary(id);

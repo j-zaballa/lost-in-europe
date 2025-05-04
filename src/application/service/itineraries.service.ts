@@ -30,7 +30,7 @@ export class ItinerariesService {
     const tickets = createDto.tickets.map((ticket) => this.ticketAdapter.adaptToEntity(ticket));
     const orderedTickets = this.sortService.sort(tickets);
     if (!orderedTickets) {
-      throw new BadRequestException('No itinerary found');
+      throw new BadRequestException('Invalid itinerary');
     }
 
     // 2. Generate a new itinerary ID
