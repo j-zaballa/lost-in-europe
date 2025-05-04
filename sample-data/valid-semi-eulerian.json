@@ -1,0 +1,67 @@
+{
+  "tickets": [
+    {
+      "kind": "train",
+      "from": "Florence",
+      "to": "Venice",
+      "trainNumber": "FR1107",
+      "platform": "2",
+      "seat": "8E"
+    },
+    {
+      "kind": "plane",
+      "from": "Madrid",
+      "to": "Rome",
+      "flightNumber": "IB3232",
+      "gate": "B7",
+      "seat": "20A",
+      "luggage": "automatic"
+    },
+    {
+      "kind": "tram",
+      "from": "Venice",
+      "to": "Venice Airport",
+      "lineNumber": "T1"
+    },
+    {
+      "kind": "bus",
+      "from": "Rome",
+      "to": "Naples",
+      "busCode": "IT312",
+      "seat": "5"
+    },
+    {
+      "kind": "plane",
+      "from": "Venice Airport",
+      "to": "London",
+      "flightNumber": "BA2573",
+      "gate": "F4",
+      "seat": "15D",
+      "luggage": "self-check-in"
+    },
+    {
+      "kind": "train",
+      "from": "Barcelona",
+      "to": "Madrid",
+      "trainNumber": "AVE 3592",
+      "platform": "8",
+      "seat": "14F"
+    },
+    {
+      "kind": "bus",
+      "from": "Rome",
+      "to": "Florence",
+      "busCode": "IT428",
+      "seat": "11"
+    },
+    {
+      "kind": "plane",
+      "from": "Naples",
+      "to": "Barcelona",
+      "flightNumber": "VY6224",
+      "gate": "D3",
+      "seat": "25C",
+      "luggage": "self-check-in"
+    }
+  ]
+}

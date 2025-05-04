@@ -1,0 +1,34 @@
+{
+  "tickets": [
+    {
+      "kind": "train",
+      "from": "Amsterdam",
+      "to": "Brussels",
+      "trainNumber": "IC 3521",
+      "platform": "4",
+      "seat": "7A"
+    },
+    {
+      "kind": "bus",
+      "from": "Brussels",
+      "to": "Amsterdam",
+      "busCode": "BF731",
+      "seat": "15"
+    },
+    {
+      "kind": "plane",
+      "from": "Tokyo",
+      "to": "Seoul",
+      "flightNumber": "JL123",
+      "gate": "E8",
+      "seat": "32C",
+      "luggage": "automatic"
+    },
+    {
+      "kind": "tram",
+      "from": "Seoul",
+      "to": "Tokyo",
+      "lineNumber": "A1"
+    }
+  ]
+}

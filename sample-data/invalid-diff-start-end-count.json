@@ -1,0 +1,42 @@
+{
+  "tickets": [
+    {
+      "kind": "train",
+      "from": "Vienna",
+      "to": "Salzburg",
+      "trainNumber": "RJ 802",
+      "platform": "5",
+      "seat": "12B"
+    },
+    {
+      "kind": "bus",
+      "from": "Salzburg",
+      "to": "Munich",
+      "busCode": "FLX212",
+      "seat": "24"
+    },
+    {
+      "kind": "tram",
+      "from": "Munich",
+      "to": "Munich Airport",
+      "lineNumber": "S8"
+    },
+    {
+      "kind": "plane",
+      "from": "Munich Airport",
+      "to": "Amsterdam",
+      "flightNumber": "LH2303",
+      "gate": "B9",
+      "seat": "15A",
+      "luggage": "self-check-in"
+    },
+    {
+      "kind": "train",
+      "from": "Brussels",
+      "to": "Paris",
+      "trainNumber": "THA 9435",
+      "platform": "3",
+      "seat": "7D"
+    }
+  ]
+}

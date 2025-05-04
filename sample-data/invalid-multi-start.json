@@ -1,0 +1,36 @@
+{
+  "tickets": [
+    {
+      "kind": "bus",
+      "from": "Rome",
+      "to": "Brussels",
+      "busCode": "FLX355",
+      "seat": "31"
+    },
+    {
+      "kind": "train",
+      "from": "Paris",
+      "to": "Rome",
+      "trainNumber": "THA 9371",
+      "platform": "3",
+      "seat": "22A"
+    },
+    {
+      "kind": "plane",
+      "from": "Barcelona",
+      "to": "Rome",
+      "flightNumber": "VY6501",
+      "gate": "A12",
+      "seat": "17F",
+      "luggage": "self-check-in"
+    },
+    {
+      "kind": "train",
+      "from": "Madrid",
+      "to": "Barcelona",
+      "trainNumber": "AVE 3432",
+      "platform": "5",
+      "seat": "9B"
+    }
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "tickets": [
+    {
+      "kind": "plane",
+      "from": "Bologna Airport",
+      "to": "Paris",
+      "flightNumber": "AF1229",
+      "gate": "22",
+      "seat": "10A",
+      "luggage": "self-check-in"
+    },
+    {
+      "kind": "train",
+      "from": "Venice",
+      "to": "Bologna",
+      "trainNumber": "ICN 35780",
+      "platform": "1",
+      "seat": "13F"
+    },
+    {
+      "kind": "plane",
+      "from": "Paris",
+      "to": "Chicago",
+      "flightNumber": "AF136",
+      "gate": "32",
+      "seat": "10A",
+      "luggage": "automatic"
+    },
+    {
+      "kind": "tram",
+      "from": "Innsbruck",
+      "to": "Innsbruck Airport",
+      "lineNumber": "S5"
+    },
+    {
+      "kind": "bus",
+      "from": "Bologna",
+      "to": "Bologna Airport",
+      "busCode": "BLQ12"
+    },
+    {
+      "kind": "train",
+      "from": "St. Anton am Arlberg",
+      "to": "Innsbruck",
+      "trainNumber": "RJX 765",
+      "platform": "3",
+      "seat": "17C"
+    },
+    {
+      "kind": "plane",
+      "from": "Innsbruck Airport",
+      "to": "Venice",
+      "flightNumber": "AA904",
+      "gate": "10",
+      "seat": "18B",
+      "luggage": "self-check-in"
+    }
+  ]
+}

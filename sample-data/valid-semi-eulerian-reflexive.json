@@ -1,0 +1,66 @@
+{
+  "tickets": [
+    {
+      "kind": "bus",
+      "from": "Paris",
+      "to": "Paris",
+      "busCode": "TOUR105",
+      "seat": "8"
+    },
+    {
+      "kind": "plane",
+      "from": "Athens Airport",
+      "to": "Berlin",
+      "flightNumber": "A3854",
+      "gate": "A5",
+      "seat": "17C",
+      "luggage": "self-check-in"
+    },
+    {
+      "kind": "train",
+      "from": "Paris",
+      "to": "Rome",
+      "trainNumber": "TGV 5427",
+      "platform": "2",
+      "seat": "19A"
+    },
+    {
+      "kind": "tram",
+      "from": "Athens",
+      "to": "Piraeus",
+      "lineNumber": "T3"
+    },
+    {
+      "kind": "plane",
+      "from": "Rome",
+      "to": "Athens",
+      "flightNumber": "AZ732",
+      "gate": "B7",
+      "seat": "5D",
+      "luggage": "automatic"
+    },
+    {
+      "kind": "train",
+      "from": "London",
+      "to": "Paris",
+      "trainNumber": "EUR 9031",
+      "platform": "6",
+      "seat": "14B"
+    },
+    {
+      "kind": "bus",
+      "from": "Piraeus",
+      "to": "Athens Airport",
+      "busCode": "X96"
+    },
+    {
+      "kind": "plane",
+      "from": "New York",
+      "to": "London",
+      "flightNumber": "BA178",
+      "gate": "E12",
+      "seat": "23F",
+      "luggage": "self-check-in"
+    }
+  ]
+}

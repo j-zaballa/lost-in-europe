@@ -1,0 +1,28 @@
+{
+  "tickets": [
+    {
+      "kind": "train",
+      "from": "Berlin",
+      "to": "Munich",
+      "trainNumber": "ICE 725",
+      "platform": "1",
+      "seat": "20D"
+    },
+    {
+      "kind": "plane",
+      "from": "Berlin",
+      "to": "Vienna",
+      "flightNumber": "OS352",
+      "gate": "D5",
+      "seat": "8F",
+      "luggage": "self-check-in"
+    },
+    {
+      "kind": "bus",
+      "from": "Berlin",
+      "to": "Prague",
+      "busCode": "BF550",
+      "seat": "13"
+    }
+  ]
+}

@@ -1,0 +1,57 @@
+{
+  "tickets": [
+    {
+      "kind": "bus",
+      "from": "Mainz",
+      "to": "Cologne",
+      "busCode": "RE500",
+      "seat": "27"
+    },
+    {
+      "kind": "train",
+      "from": "Bremen",
+      "to": "Berlin",
+      "trainNumber": "ICE 956",
+      "platform": "2",
+      "seat": "19A"
+    },
+    {
+      "kind": "tram",
+      "from": "Frankfurt",
+      "to": "Mainz",
+      "lineNumber": "S8"
+    },
+    {
+      "kind": "train",
+      "from": "Cologne",
+      "to": "Berlin",
+      "trainNumber": "ICE 558",
+      "platform": "9",
+      "seat": "12D"
+    },
+    {
+      "kind": "plane",
+      "from": "Berlin",
+      "to": "Frankfurt",
+      "flightNumber": "LH795",
+      "gate": "A4",
+      "seat": "3F",
+      "luggage": "self-check-in"
+    },
+    {
+      "kind": "train",
+      "from": "Berlin",
+      "to": "Hamburg",
+      "trainNumber": "ICE 1045",
+      "platform": "5",
+      "seat": "23B"
+    },
+    {
+      "kind": "bus",
+      "from": "Hamburg",
+      "to": "Bremen",
+      "busCode": "FLX200",
+      "seat": "14"
+    }
+  ]
+}

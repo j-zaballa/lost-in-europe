@@ -1,0 +1,32 @@
+{
+  "tickets": [
+    {
+      "kind": "tram",
+      "from": "Brussels",
+      "to": "Bruges",
+      "lineNumber": "T3"
+    },
+    {
+      "kind": "train",
+      "from": "Paris",
+      "to": "Brussels",
+      "trainNumber": "THA 9083",
+      "platform": "7",
+      "seat": "18C"
+    },
+    {
+      "kind": "bus",
+      "from": "Paris",
+      "to": "Lyon",
+      "busCode": "BF211"
+    },
+    {
+      "kind": "train",
+      "from": "London",
+      "to": "Paris",
+      "trainNumber": "EST 7001",
+      "platform": "12",
+      "seat": "4D"
+    }
+  ]
+}

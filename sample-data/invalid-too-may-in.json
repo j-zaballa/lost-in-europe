@@ -1,0 +1,28 @@
+{
+  "tickets": [
+    {
+      "kind": "train",
+      "from": "Vienna",
+      "to": "Prague",
+      "trainNumber": "EC 175",
+      "platform": "2",
+      "seat": "15A"
+    },
+    {
+      "kind": "bus",
+      "from": "Berlin",
+      "to": "Prague",
+      "busCode": "FLX423",
+      "seat": "22"
+    },
+    {
+      "kind": "plane",
+      "from": "Warsaw",
+      "to": "Prague",
+      "flightNumber": "LO527",
+      "gate": "C4",
+      "seat": "11B",
+      "luggage": "self-check-in"
+    }
+  ]
+}

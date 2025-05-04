@@ -1,0 +1,43 @@
+{
+  "tickets": [
+    {
+      "kind": "plane",
+      "from": "Munich",
+      "to": "Paris",
+      "flightNumber": "LH2234",
+      "gate": "B12",
+      "seat": "7A",
+      "luggage": "self-check-in"
+    },
+    {
+      "kind": "bus",
+      "from": "Salzburg",
+      "to": "Munich",
+      "busCode": "FB350",
+      "seat": "22"
+    },
+    {
+      "kind": "plane",
+      "from": "Versailles",
+      "to": "Vienna",
+      "flightNumber": "AF1235",
+      "gate": "C15",
+      "seat": "12C",
+      "luggage": "automatic"
+    },
+    {
+      "kind": "train",
+      "from": "Vienna",
+      "to": "Salzburg",
+      "trainNumber": "ICE 552",
+      "platform": "4",
+      "seat": "15D"
+    },
+    {
+      "kind": "tram",
+      "from": "Paris",
+      "to": "Versailles",
+      "lineNumber": "T6"
+    }
+  ]
+}
