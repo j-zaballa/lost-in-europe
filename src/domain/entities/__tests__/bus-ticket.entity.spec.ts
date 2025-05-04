@@ -58,7 +58,7 @@ describe('BusTicketEntity', () => {
       const ticket = new BusTicketEntity('Berlin', 'Munich', 'BUS-123', '15D');
 
       // Act
-      // @ts-ignore - accessing private method for testing
+      // @ts-expect-error - accessing private method for testing
       const result = ticket.getSeatDescription();
 
       // Assert
@@ -70,7 +70,7 @@ describe('BusTicketEntity', () => {
       const ticket = new BusTicketEntity('Berlin', 'Munich', 'BUS-123');
 
       // Act
-      // @ts-ignore - accessing private method for testing
+      // @ts-expect-error - accessing private method for testing
       const result = ticket.getSeatDescription();
 
       // Assert

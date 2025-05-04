@@ -63,7 +63,7 @@ describe('PlaneTicketEntity', () => {
       const ticket = new PlaneTicketEntity('Rome', 'Amsterdam', 'AF-1234', '12C', 'B22', 'automatic');
 
       // Act
-      // @ts-ignore - accessing private method for testing
+      // @ts-expect-error - accessing private method for testing
       const result = ticket.getLiggageDescription();
 
       // Assert
@@ -75,7 +75,7 @@ describe('PlaneTicketEntity', () => {
       const ticket = new PlaneTicketEntity('Rome', 'Amsterdam', 'AF-1234', '12C', 'B22', 'self-check-in');
 
       // Act
-      // @ts-ignore - accessing private method for testing
+      // @ts-expect-error - accessing private method for testing
       const result = ticket.getLiggageDescription();
 
       // Assert

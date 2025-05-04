@@ -30,7 +30,7 @@ export class TicketSortService {
     }
 
     // Find a path
-    const path = this.dfs(this.findStartNode());
+    const path = this.dfs(this.findStartNode(tickets));
 
     // Check if the path is valid
     if (!this.isValidPath(path, tickets)) {
@@ -128,19 +128,23 @@ export class TicketSortService {
    *
    * @returns the name of the start city
    */
-  private findStartNode(): string {
-    // First, look for a node with out-degree > in-degree (start of path)
+  private findStartNode(tickets: TicketEntity[]): string {
+    // First, we assume that every node has balanced degrees.
+    // In this case we can pick any node with outgoing edges.
+    // Since the inputs are tickets (edges), we can pick any node.
+    // because all vertices have outgoing edges.
+    let startNode = tickets[0].from;
+
+    // We then check if there is a start node
     for (const [city, inDegree] of this.inDeg.entries()) {
       const outDegree = this.outDeg.get(city)!;
       if (outDegree > inDegree) {
-        return city;
+        startNode = city;
+        break;
       }
     }
 
-    // If all nodes have balanced degrees, pick any node with outgoing edges.
-    // In our case, because the input are tickets (edges), we can pick any node
-    // because all nodes have outgoing edges.
-    return this.outDeg.keys().next().value;
+    return startNode;
   }
 
   /**
