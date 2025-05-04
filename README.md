@@ -501,7 +501,7 @@ DATABASE_TYPE=typeorm npm run start:dev
 DATABASE_TYPE=in-memory npm run start:dev
 ```
 
-We can alse set the variable in the `.env` file.
+We can also set the variable in the `.env` file.
 
 ```
 # /.env
