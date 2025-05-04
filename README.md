@@ -39,8 +39,7 @@ $ npm run test:cov
 
 ## Documentation
 
-visit http://localhost:3000/docs to see the API documentation. You can also use the Swagger UI to test the API. You can
-find sample test data in the `sample-data` folder.
+With the project running, visit http://localhost:3000/docs to see the API documentation. You can also use the Swagger UI to test the API. You can find sample test data in the `sample-data` folder.
 
 ## Usage
 
@@ -286,7 +285,7 @@ Output:
 
 ## Add New Ticket Types
 
-We have adopted a polymorphic approach to the ticket types and endorsed the open/closed principle so we can add new ticket types without modifying the existing code.
+We have adopted a polymorphic approach to the ticket types and endorsed the open/closed principle so we can add new ticket types without modifying the existing entities and DTOs.
 
 To add a new ticket type, you need to:
 
