@@ -479,3 +479,33 @@ export class ItineraryDto {
   tickets!: TicketBaseDto[];
 }
 ```
+
+## Repository Implementation Configuration
+
+The application supports dynamic repository implementation selection via environment variables. This allows you to switch between different storage mechanisms without code changes.
+
+### Available Repository Implementations
+
+- **TypeOrmItineraryRepository**: Stores data in a SQL database using TypeORM
+- **InMemoryItineraryRepository**: Stores data in memory (useful for testing or development)
+
+### Configuration
+
+Set the `DATABASE_TYPE` environment variable to choose the repository implementation:
+
+```bash
+# Use TypeORM implementation
+DATABASE_TYPE=typeorm npm run start:dev
+
+# Use In-Memory implementation
+DATABASE_TYPE=in-memory npm run start:dev
+```
+
+We can alse set the variable in the `.env` file.
+
+```
+# /.env
+DATABASE_TYPE=typeorm # or in-memory
+```
+
+If no `DATABASE_TYPE` is specified, the application defaults to the in-memory implementation.
