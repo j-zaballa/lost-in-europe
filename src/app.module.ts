@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { BusTicketAdapter } from './application/adapters/bus-ticket.adapter';
@@ -12,7 +13,7 @@ import { ItineraryDomainModule } from './domain/itinerary.module';
 import { RepositoryModule } from './infraestructure/repository/repository.module';
 
 @Module({
-  imports: [ItineraryDomainModule, RepositoryModule],
+  imports: [ConfigModule.forRoot({ isGlobal: true }), ItineraryDomainModule, RepositoryModule],
   controllers: [AppController, ItinerariesController],
   providers: [
     AppService,
