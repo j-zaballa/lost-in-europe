@@ -1,11 +1,12 @@
 import { createMock } from '@golevelup/ts-jest';
+import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { ItineraryEntity as ItineraryDomain } from 'src/domain/entities/itinerary.entity';
 import { TicketEntity } from 'src/domain/entities/ticket-base.entity';
 import { OrmItineraryAdapter } from 'src/infraestructure/adapters/orm-itinerary.adapter';
 import { OrmTicketAdapter } from 'src/infraestructure/adapters/orm-ticket.adapter';
-import { Repository } from 'typeorm';
+import { DataSource, EntityManager, QueryRunner, Repository } from 'typeorm';
 import { ItineraryEntity as ItineraryEntityOrm } from '../../database/entities/itinerary.entity';
 import { TicketEntity as TicketEntityOrm } from '../../database/entities/ticket.entity';
 import { TypeOrmItineraryRepository } from '../type-orm-itinerary-repository';
@@ -13,11 +14,24 @@ import { TypeOrmItineraryRepository } from '../type-orm-itinerary-repository';
 describe('TypeOrmItineraryRepository', () => {
   let repository: TypeOrmItineraryRepository;
   let itineraryRepository: jest.Mocked<Repository<ItineraryEntityOrm>>;
-  let ticketRepository: jest.Mocked<Repository<TicketEntityOrm>>;
   let ticketAdapter: jest.Mocked<OrmTicketAdapter>;
   let itineraryAdapter: jest.Mocked<OrmItineraryAdapter>;
+  let dataSource: jest.Mocked<DataSource>;
+  let queryRunnerMock: jest.Mocked<QueryRunner>;
 
   beforeEach(async () => {
+    // Create a mock query runner with all needed methods
+    queryRunnerMock = {
+      connect: jest.fn().mockResolvedValue(undefined),
+      startTransaction: jest.fn().mockResolvedValue(undefined),
+      commitTransaction: jest.fn().mockResolvedValue(undefined),
+      rollbackTransaction: jest.fn().mockResolvedValue(undefined),
+      release: jest.fn().mockResolvedValue(undefined),
+      manager: {
+        save: jest.fn(),
+      } as unknown as EntityManager,
+    } as unknown as jest.Mocked<QueryRunner>;
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         TypeOrmItineraryRepository,
@@ -37,14 +51,20 @@ describe('TypeOrmItineraryRepository', () => {
           provide: OrmItineraryAdapter,
           useValue: createMock<OrmItineraryAdapter>(),
         },
+        {
+          provide: DataSource,
+          useValue: {
+            createQueryRunner: jest.fn().mockReturnValue(queryRunnerMock),
+          },
+        },
       ],
     }).compile();
 
     repository = module.get<TypeOrmItineraryRepository>(TypeOrmItineraryRepository);
     itineraryRepository = module.get(getRepositoryToken(ItineraryEntityOrm));
-    ticketRepository = module.get(getRepositoryToken(TicketEntityOrm));
     ticketAdapter = module.get(OrmTicketAdapter);
     itineraryAdapter = module.get(OrmItineraryAdapter);
+    dataSource = module.get(DataSource);
   });
 
   it('should be defined', () => {
@@ -87,9 +107,15 @@ describe('TypeOrmItineraryRepository', () => {
 
       // Mock the adapter and repository methods
       itineraryAdapter.adaptToOrm.mockReturnValue(ormItinerary);
-      itineraryRepository.save.mockResolvedValue(savedOrmItinerary);
+      (queryRunnerMock.manager.save as jest.Mock).mockImplementation((entity) => {
+        if (entity === ItineraryEntityOrm) {
+          return Promise.resolve(savedOrmItinerary);
+        } else if (entity === TicketEntityOrm) {
+          return Promise.resolve(savedTicketOrm);
+        }
+        return Promise.resolve(null);
+      });
       ticketAdapter.adaptToOrm.mockReturnValue(ticketOrm);
-      ticketRepository.save.mockResolvedValue(savedTicketOrm);
       itineraryRepository.findOne.mockResolvedValue(retrievedOrmItinerary);
       itineraryAdapter.adaptToDomain.mockReturnValue(domainItinerary);
 
@@ -97,19 +123,24 @@ describe('TypeOrmItineraryRepository', () => {
       const result = await repository.save(domainItinerary);
 
       // Assert
+      expect(dataSource.createQueryRunner).toHaveBeenCalled();
+      expect(queryRunnerMock.connect).toHaveBeenCalled();
+      expect(queryRunnerMock.startTransaction).toHaveBeenCalled();
       expect(itineraryAdapter.adaptToOrm).toHaveBeenCalledWith(domainItinerary);
-      expect(itineraryRepository.save).toHaveBeenCalledWith(ormItinerary);
+      expect(queryRunnerMock.manager.save).toHaveBeenCalledWith(ItineraryEntityOrm, ormItinerary);
       expect(ticketAdapter.adaptToOrm).toHaveBeenCalledWith(ticketDomain, 'test-id');
-      expect(ticketRepository.save).toHaveBeenCalledWith(ticketOrm);
+      expect(queryRunnerMock.manager.save).toHaveBeenCalledWith(TicketEntityOrm, ticketOrm);
+      expect(queryRunnerMock.commitTransaction).toHaveBeenCalled();
       expect(itineraryRepository.findOne).toHaveBeenCalledWith({
         where: { id: 'test-id' },
         relations: ['tickets'],
       });
       expect(itineraryAdapter.adaptToDomain).toHaveBeenCalledWith(retrievedOrmItinerary);
+      expect(queryRunnerMock.release).toHaveBeenCalled();
       expect(result).toBe(domainItinerary);
     });
 
-    it('should throw an error if itinerary cannot be retrieved after save', async () => {
+    it('should throw a NotFoundException if itinerary cannot be retrieved after save', async () => {
       // Arrange
       const ticketDomain = {
         kind: 'train',
@@ -130,15 +161,37 @@ describe('TypeOrmItineraryRepository', () => {
 
       // Mock the adapter and repository methods
       itineraryAdapter.adaptToOrm.mockReturnValue(ormItinerary);
-      itineraryRepository.save.mockResolvedValue(savedOrmItinerary);
+      (queryRunnerMock.manager.save as jest.Mock).mockImplementation((entity) => {
+        if (entity === ItineraryEntityOrm) {
+          return Promise.resolve(savedOrmItinerary);
+        } else if (entity === TicketEntityOrm) {
+          return Promise.resolve(ticketOrm);
+        }
+        return Promise.resolve(null);
+      });
       ticketAdapter.adaptToOrm.mockReturnValue(ticketOrm);
-      ticketRepository.save.mockResolvedValue(ticketOrm);
       itineraryRepository.findOne.mockResolvedValue(null);
 
       // Act & Assert
-      await expect(repository.save(domainItinerary)).rejects.toThrow(
-        `Failed to retrieve saved itinerary with ID test-id`,
-      );
+      await expect(repository.save(domainItinerary)).rejects.toThrow(NotFoundException);
+      expect(queryRunnerMock.rollbackTransaction).toHaveBeenCalled();
+      expect(queryRunnerMock.release).toHaveBeenCalled();
+    });
+
+    it('should rollback transaction and rethrow error if any operation fails', async () => {
+      // Arrange
+      const error = new Error('Database error');
+      const domainItinerary = new ItineraryDomain([{ kind: 'train' } as TicketEntity], 'test-id');
+      const ormItinerary = new ItineraryEntityOrm();
+
+      // Mock methods to throw an error
+      itineraryAdapter.adaptToOrm.mockReturnValue(ormItinerary);
+      (queryRunnerMock.manager.save as jest.Mock).mockRejectedValue(error);
+
+      // Act & Assert
+      await expect(repository.save(domainItinerary)).rejects.toThrow(error);
+      expect(queryRunnerMock.rollbackTransaction).toHaveBeenCalled();
+      expect(queryRunnerMock.release).toHaveBeenCalled();
     });
   });
 

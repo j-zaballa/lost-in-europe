@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ItineraryEntity as ItineraryEntityDomain } from 'src/domain/entities/itinerary.entity';
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { OrmItineraryAdapter } from '../adapters/orm-itinerary.adapter';
 import { OrmTicketAdapter } from '../adapters/orm-ticket.adapter';
 import { ItineraryEntity as ItineraryEntityOrm } from '../database/entities/itinerary.entity';
@@ -17,36 +17,52 @@ export class TypeOrmItineraryRepository implements ItineraryRepository {
     private ticketsRepository: Repository<TicketEntityOrm>,
     private readonly ticketAdapter: OrmTicketAdapter,
     private readonly itineraryAdapter: OrmItineraryAdapter,
+    private dataSource: DataSource,
   ) {}
 
   async save(record: ItineraryEntityDomain): Promise<ItineraryEntityDomain> {
-    // Convert domain itinerary to ORM itinerary
-    const ormItinerary = this.itineraryAdapter.adaptToOrm(record);
+    // Create a transaction using the QueryRunner
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
 
-    // Save the itinerary first to get the ID
-    const savedItinerary = await this.itinerariesRepository.save(ormItinerary);
+    try {
+      // Convert domain itinerary to ORM itinerary
+      const ormItinerary = this.itineraryAdapter.adaptToOrm(record);
 
-    // Save each ticket and associate it with the itinerary
-    const ticketPromises = record.tickets.map(async (domainTicket) => {
-      // Use the adapter to convert domain ticket to ORM ticket
-      const ormTicket = this.ticketAdapter.adaptToOrm(domainTicket, savedItinerary.id);
-      return this.ticketsRepository.save(ormTicket);
-    });
+      // Save the itinerary first to get the ID
+      const savedItinerary = await queryRunner.manager.save(ItineraryEntityOrm, ormItinerary);
 
-    await Promise.all(ticketPromises);
+      // Save each ticket and associate it with the itinerary
+      for (const domainTicket of record.tickets) {
+        // Use the adapter to convert domain ticket to ORM ticket
+        const ormTicket = this.ticketAdapter.adaptToOrm(domainTicket, savedItinerary.id);
+        await queryRunner.manager.save(TicketEntityOrm, ormTicket);
+      }
 
-    // Fetch the complete itinerary with tickets
-    const result = await this.itinerariesRepository.findOne({
-      where: { id: savedItinerary.id },
-      relations: ['tickets'],
-    });
+      // Commit the transaction
+      await queryRunner.commitTransaction();
 
-    if (!result) {
-      throw new Error(`Failed to retrieve saved itinerary with ID ${savedItinerary.id}`);
+      // Fetch the complete itinerary with tickets
+      const result = await this.itinerariesRepository.findOne({
+        where: { id: savedItinerary.id },
+        relations: ['tickets'],
+      });
+
+      if (!result) {
+        throw new NotFoundException(`Failed to retrieve saved itinerary with ID ${savedItinerary.id}`);
+      }
+
+      // Convert back to domain entity using the adapter
+      return this.itineraryAdapter.adaptToDomain(result);
+    } catch (error) {
+      // If we encounter an error, roll back the transaction
+      await queryRunner.rollbackTransaction();
+      throw error;
+    } finally {
+      // Always release the query runner regardless of success or failure
+      await queryRunner.release();
     }
-
-    // Convert back to domain entity using the adapter
-    return this.itineraryAdapter.adaptToDomain(result);
   }
 
   async findOne(id: string): Promise<ItineraryEntityDomain | undefined> {
