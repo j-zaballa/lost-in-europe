@@ -1,5 +1,5 @@
 import { ApiExtraModels, ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString, MaxLength } from 'class-validator';
 import { TicketBaseDto } from './ticket-base.dto';
 
 @ApiExtraModels()
@@ -9,6 +9,7 @@ export class BusTicketDto extends TicketBaseDto {
   @ApiProperty({ example: 'airport', description: 'Bus line or code' })
   @IsString()
   @IsNotEmpty({ message: 'busCode is required for bus tickets' })
+  @MaxLength(20)
   busCode!: string;
 
   @ApiProperty({
@@ -18,5 +19,6 @@ export class BusTicketDto extends TicketBaseDto {
   })
   @IsOptional()
   @IsString()
+  @MaxLength(10)
   seat?: string;
 }

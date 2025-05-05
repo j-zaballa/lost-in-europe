@@ -18,7 +18,7 @@ export class TicketEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'varchar', length: 50 })
+  @Column({ type: 'varchar', length: 20 })
   kind: string; // 'plane', 'train', 'bus', 'tram'
 
   @Column({ type: 'varchar', length: 100 })
