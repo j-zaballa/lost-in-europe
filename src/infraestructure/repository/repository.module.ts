@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConditionalModule } from '@nestjs/config';
 import { TypeOrmModule, getRepositoryToken } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { OrmAdaptersModule } from '../adapters/orm-adapters.module';
 import { OrmItineraryAdapter } from '../adapters/orm-itinerary.adapter';
 import { OrmTicketAdapter } from '../adapters/orm-ticket.adapter';
@@ -21,20 +21,17 @@ export const itineraryRepositoryFactory = (
   ticketEntityRepository?: Repository<TicketEntity>,
   ticketAdapter?: OrmTicketAdapter,
   itineraryAdapter?: OrmItineraryAdapter,
+  dataSource?: DataSource,
 ) => {
   if (
     process.env.DATABASE_TYPE === 'typeorm' &&
     itineraryEntityRepository &&
     ticketEntityRepository &&
     ticketAdapter &&
-    itineraryAdapter
+    itineraryAdapter &&
+    dataSource
   ) {
-    return new TypeOrmItineraryRepository(
-      itineraryEntityRepository,
-      ticketEntityRepository,
-      ticketAdapter,
-      itineraryAdapter,
-    );
+    return new TypeOrmItineraryRepository(itineraryEntityRepository, ticketAdapter, itineraryAdapter, dataSource);
   }
 
   return new InMemoryItineraryRepository();
@@ -45,9 +42,9 @@ const itineraryRepositoryProvider = {
   useFactory: itineraryRepositoryFactory,
   inject: [
     { token: getRepositoryToken(ItineraryEntity), optional: true },
-    { token: getRepositoryToken(TicketEntity), optional: true },
     { token: OrmTicketAdapter, optional: true },
     { token: OrmItineraryAdapter, optional: true },
+    { token: DataSource, optional: true },
   ],
 };
 @Module({

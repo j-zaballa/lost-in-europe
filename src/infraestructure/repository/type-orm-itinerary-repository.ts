@@ -13,8 +13,6 @@ export class TypeOrmItineraryRepository implements ItineraryRepository {
   constructor(
     @InjectRepository(ItineraryEntityOrm)
     private itinerariesRepository: Repository<ItineraryEntityOrm>,
-    @InjectRepository(TicketEntityOrm)
-    private ticketsRepository: Repository<TicketEntityOrm>,
     private readonly ticketAdapter: OrmTicketAdapter,
     private readonly itineraryAdapter: OrmItineraryAdapter,
     private dataSource: DataSource,
