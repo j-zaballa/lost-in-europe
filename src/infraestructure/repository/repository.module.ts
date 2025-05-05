@@ -16,9 +16,9 @@ export const conditionalModuleImports = ConditionalModule.registerWhen(
   (env: NodeJS.ProcessEnv) => env['DATABASE_TYPE'] === 'typeorm',
 );
 
-export const itineraryRepositoryFactory = (
+const itineraryRepositoryFactory = (
   itineraryEntityRepository?: Repository<ItineraryEntity>,
-  ticketEntityRepository?: Repository<TicketEntity>,
+
   ticketAdapter?: OrmTicketAdapter,
   itineraryAdapter?: OrmItineraryAdapter,
   dataSource?: DataSource,
@@ -26,7 +26,6 @@ export const itineraryRepositoryFactory = (
   if (
     process.env.DATABASE_TYPE === 'typeorm' &&
     itineraryEntityRepository &&
-    ticketEntityRepository &&
     ticketAdapter &&
     itineraryAdapter &&
     dataSource
@@ -42,9 +41,9 @@ const itineraryRepositoryProvider = {
   useFactory: itineraryRepositoryFactory,
   inject: [
     { token: getRepositoryToken(ItineraryEntity), optional: true },
-    { token: OrmTicketAdapter, optional: true },
-    { token: OrmItineraryAdapter, optional: true },
-    { token: DataSource, optional: true },
+    OrmTicketAdapter,
+    OrmItineraryAdapter,
+    DataSource,
   ],
 };
 @Module({
